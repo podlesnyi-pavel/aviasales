@@ -1,0 +1,73 @@
+@use '@/styles/variables' as var;
+
+$lr-p: 20px;
+
+.filters {
+  width: 232px;
+  padding: 20px 0;
+  border-radius: 5px;
+  box-shadow: 0 2px 8px 0 rgba(var.$black, 0.1);
+  background: var.$white;
+
+  &__title {
+    margin-bottom: 10px;
+    padding: 0 $lr-p;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    line-height: 12px;
+  }
+
+  &__list {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+  }
+}
+
+.filter-item {
+  display: flex;
+  height: 40px;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 20px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var.$main-brand-hover;
+  }
+
+  &__label {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 10px $lr-p;
+    cursor: inherit;
+  }
+
+  &__checkbox {
+    appearance: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    background-color: var.$white;
+    border-radius: 2px;
+    border: 1px solid var.$checkbox-border;
+    cursor: inherit;
+
+    &:checked {
+      border: 1px solid var.$main-brand;
+    }
+
+    &:checked::after {
+      content: '';
+      position: absolute;
+      width: 12px;
+      height: 8px;
+      background-image: url('../../images/icons/checkbox-icon.svg');
+    }
+  }
+}

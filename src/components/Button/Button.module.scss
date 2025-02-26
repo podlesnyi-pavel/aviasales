@@ -1,0 +1,50 @@
+@use '@/styles/variables.scss' as var;
+
+.button {
+  flex: 1 0 100px;
+  width: 100%;
+  height: 50px;
+  padding: 5px;
+  border: 1px solid var.$button-border;
+  background-color: var.$white;
+  font-size: 12px;
+  text-transform: uppercase;
+  line-height: 20px;
+  letter-spacing: 0.5px;
+  text-align: center;
+  cursor: pointer;
+
+  @media (min-width: var.$media-screen-after-min-mobile) {
+    flex-basis: 150px;
+    padding: 15px;
+  }
+
+  &:hover:not(.button--type--brand) {
+    background-color: var.$main-brand-hover;
+  }
+
+  &--type {
+    &--brand {
+      background-color: var.$main-brand;
+      color: var.$white;
+    }
+  }
+
+  &--br {
+    $border-radius: 5px;
+
+    &--left {
+      border-top-left-radius: $border-radius;
+      border-bottom-left-radius: $border-radius;
+    }
+
+    &--right {
+      border-top-right-radius: $border-radius;
+      border-bottom-right-radius: $border-radius;
+    }
+
+    &--both {
+      border-radius: $border-radius;
+    }
+  }
+}

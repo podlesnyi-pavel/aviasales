@@ -1,0 +1,52 @@
+@use '@/styles/variables.scss' as var;
+
+.ticket-card {
+  width: 100%;
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 5px;
+  background-color: var.$white;
+  box-shadow: 0 2px 8px 0 rgba(var.$black, 0.1);
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.price {
+  font-size: 24px;
+  line-height: 24px;
+  color: var.$main-brand;
+}
+
+.description {
+  margin-top: 20px;
+}
+
+.line {
+  display: flex;
+
+  & + .line {
+    margin-top: 10px;
+  }
+}
+
+.column {
+  flex-basis: 33.3%;
+  display: flex;
+  flex-direction: column;
+}
+
+.column-title {
+  font-size: 12px;
+  line-height: 18px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var.$color-description-text;
+}
+
+.column-value {
+  line-height: 21px;
+}
