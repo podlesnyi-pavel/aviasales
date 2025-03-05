@@ -13,28 +13,16 @@ interface ButtonProps {
 const Button: FC<ButtonProps> = ({
   text,
   brandButton = false,
-  borderType,
+  borderType = '',
   customClass = '',
   onClick,
 }) => {
-  const mainClass = 'button';
-  let borderRadius = '';
-
-  if (borderType === EBorderRadiusType.Left) {
-    borderRadius = styles[`${mainClass}--br--left`];
-  }
-
-  if (borderType === EBorderRadiusType.Right) {
-    borderRadius = styles[`${mainClass}--br--right`];
-  }
-
-  if (borderType === EBorderRadiusType.Both) {
-    borderRadius = styles[`${mainClass}--br--both`];
-  }
+  const brandClass = brandButton ? styles['button--type--brand'] : '';
+  const borderRadius = borderType ? styles[`button--br--${borderType}`] : '';
 
   return (
     <button
-      className={`${styles.button} ${brandButton ? styles[`${mainClass}--type--brand`] : ''} ${borderRadius} ${customClass}`}
+      className={`${styles.button} ${brandClass} ${borderRadius} ${customClass}`}
       onClick={onClick}
     >
       {text}

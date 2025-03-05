@@ -1,20 +1,29 @@
 import { FC } from 'react';
 import styles from './Filter.module.scss';
+import { TTransferFiltersItem } from '@/store/slices/transferFilter';
 
 interface FilterItemProps {
-  text: string;
+  item: TTransferFiltersItem;
+  onChange: (id: number) => void;
 }
 
-const FilterItem: FC<FilterItemProps> = ({ text }) => {
+const FilterItem: FC<FilterItemProps> = ({
+  item: { id, title, value },
+  onChange,
+}) => {
   return (
     <li className={styles['filter-item']}>
-      <label className={styles['filter-item__label']} htmlFor={text}>
+      <label className={styles['filter-item__label']} htmlFor={id.toString()}>
         <input
           className={styles['filter-item__checkbox']}
           type="checkbox"
-          id={text}
+          id={id.toString()}
+          checked={value}
+          onChange={() => {
+            onChange(id);
+          }}
         />
-        {text}
+        {title}
       </label>
     </li>
   );
@@ -22,18 +31,18 @@ const FilterItem: FC<FilterItemProps> = ({ text }) => {
 
 interface FilterProps {
   title: string;
+  items: TTransferFiltersItem[];
+  onChangeItem: (id: number) => void;
 }
 
-const Filter: FC<FilterProps> = ({ title }) => {
+const Filter: FC<FilterProps> = ({ title, items, onChangeItem }) => {
   return (
     <div className={styles.filters}>
       <div className={styles.filters__title}>{title}</div>
       <ul className={styles.filters__list}>
-        <FilterItem text="Все" />
-        <FilterItem text="Без пересадок" />
-        <FilterItem text="1 пересадка" />
-        <FilterItem text="2 пересадки" />
-        <FilterItem text="3 пересадки" />
+        {items.map((item) => (
+          <FilterItem key={item.id} item={item} onChange={onChangeItem} />
+        ))}
       </ul>
     </div>
   );
