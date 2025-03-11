@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import Filter from '@/components/Filter/Filter';
 import Button from '@/components/Button';
 import { ETypeFilterTicket } from '@/types/enums/ETypeFilterTicket';
@@ -7,21 +7,30 @@ import TicketPreview from '@/components/TicketPreview';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeTypeSorted, typeSortedSelect } from '@/store/slices/typeSorted';
 import {
+  isItemsTrue,
   toggleTransferFiltersItem,
   transferFiltersSelect,
 } from '@/store/slices/transferFilter';
+import {
+  selectFetchTicketsStatus,
+  selectTicketsMemo,
+} from '@/store/slices/aviasales';
+import EStatusFetch from './types/enums/EStatusFetch';
 
 const App: FC = () => {
+  const [ticketsLength, setTicketsLength] = useState(5);
   const dispatch = useDispatch();
   const typeTicket = useSelector(typeSortedSelect);
   const transferFilterItems = useSelector(transferFiltersSelect);
+  const tickets = useSelector(selectTicketsMemo).slice(0, ticketsLength);
+  const fetchTicketsStatus = useSelector(selectFetchTicketsStatus);
 
   function onChangeTransferFilter(id: number) {
     dispatch(toggleTransferFiltersItem(id));
   }
 
   function load5Tickets() {
-    console.log('load5Tickets');
+    setTicketsLength((ticketsLength) => ticketsLength + 5);
   }
 
   return (
@@ -69,20 +78,30 @@ const App: FC = () => {
             onChangeItem={onChangeTransferFilter}
           />
         </div>
-        <section>
-          <TicketPreview />
-          <TicketPreview />
-          <TicketPreview />
-          <TicketPreview />
-          <TicketPreview />
+        <section className="app__section">
+          {fetchTicketsStatus === EStatusFetch.Loading && (
+            <div className="loader"></div>
+          )}
+
+          {tickets.map((ticket) => {
+            return <TicketPreview key={ticket.id} ticket={ticket} />;
+          })}
+
+          {!!tickets.length && (
+            <Button
+              customClass="app__button-load"
+              text="Показать еще 5 билетов!"
+              brandButton
+              borderType={EBorderRadiusType.Both}
+              onClick={load5Tickets}
+            />
+          )}
+          {!isItemsTrue(transferFilterItems) && (
+            <div className="app__nothing-found">
+              Рейсов, подходящих под заданные фильтры, не найдено
+            </div>
+          )}
         </section>
-        <Button
-          customClass="app__button-load"
-          text="Показать еще 5 билетов!"
-          brandButton
-          borderType={EBorderRadiusType.Both}
-          onClick={load5Tickets}
-        ></Button>
       </main>
     </div>
   );

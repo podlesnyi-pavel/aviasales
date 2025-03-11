@@ -41,12 +41,22 @@ body {
     flex-grow: 1;
   }
 
+  &__section {
+    position: relative;
+    padding-top: 20px;
+  }
+
   &__buttons {
     display: flex;
   }
 
   &__button-load {
     margin-top: 20px;
+  }
+
+  &__nothing-found {
+    margin-top: 20px;
+    text-align: center;
   }
 }
 
@@ -63,5 +73,26 @@ body {
       margin-top: 40px;
       margin-bottom: 30px;
     }
+  }
+}
+
+.loader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  transform: translateY(50%);
+  height: 7px;
+  background: repeating-linear-gradient(
+      -45deg,
+      var.$main-brand 0 15px,
+      #0000 0 20px
+    )
+    left/200% 100%;
+  animation: l3 5s infinite linear;
+}
+@keyframes l3 {
+  100% {
+    background-position: right;
   }
 }

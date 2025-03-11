@@ -8,7 +8,7 @@ interface FilterItemProps {
 }
 
 const FilterItem: FC<FilterItemProps> = ({
-  item: { id, title, value },
+  item: { id, title, isActive },
   onChange,
 }) => {
   return (
@@ -18,7 +18,7 @@ const FilterItem: FC<FilterItemProps> = ({
           className={styles['filter-item__checkbox']}
           type="checkbox"
           id={id.toString()}
-          checked={value}
+          checked={isActive}
           onChange={() => {
             onChange(id);
           }}

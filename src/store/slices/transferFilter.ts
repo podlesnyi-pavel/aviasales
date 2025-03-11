@@ -2,20 +2,20 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 const initialState = {
   transferFilters: [
-    { id: 0, title: 'Все', value: false },
-    { id: 1, title: 'Без пересадок', value: false },
-    { id: 2, title: '1 пересадка', value: false },
-    { id: 3, title: '2 пересадки', value: false },
-    { id: 4, title: '3 пересадки', value: false },
+    { id: 0, title: 'Все', isActive: true },
+    { id: 1, title: 'Без пересадок', isActive: true, value: 0 },
+    { id: 2, title: '1 пересадка', isActive: true, value: 1 },
+    { id: 3, title: '2 пересадки', isActive: true, value: 2 },
+    { id: 4, title: '3 пересадки', isActive: true, value: 3 },
   ],
 };
 
 type TState = typeof initialState;
 export type TTransferFiltersItem = (typeof initialState.transferFilters)[0];
 
-function isItemsTrue(transferFilters: TTransferFiltersItem[]) {
+export function isItemsTrue(transferFilters: TTransferFiltersItem[]): boolean {
   for (let i = 1; i < transferFilters.length; i++) {
-    if (!transferFilters[i].value) {
+    if (!transferFilters[i].isActive) {
       return false;
     }
   }
@@ -37,22 +37,22 @@ const transferFilterSlice = createSlice({
         (item) => item.id === action.payload,
       );
 
-      transferFilters[index].value = !transferFilters[index].value;
+      transferFilters[index].isActive = !transferFilters[index].isActive;
 
       if (action.payload === 0) {
         transferFilters.forEach(
-          (item) => (item.value = transferFilters[index].value),
+          (item) => (item.isActive = transferFilters[index].isActive),
         );
         return;
       }
 
-      if (!transferFilters[index].value) {
-        transferFilters[0].value = false;
+      if (!transferFilters[index].isActive) {
+        transferFilters[0].isActive = false;
         return;
       }
 
       if (isItemsTrue(transferFilters)) {
-        transferFilters[0].value = true;
+        transferFilters[0].isActive = true;
       }
     },
   },
