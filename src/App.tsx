@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import Filter from '@/components/Filter/Filter';
 import Button from '@/components/Button';
 import { ETypeFilterTicket } from '@/types/enums/ETypeFilterTicket';
@@ -16,14 +16,38 @@ import {
   selectTicketsMemo,
 } from '@/store/slices/aviasales';
 import EStatusFetch from './types/enums/EStatusFetch';
+import { useAppStore } from '@/hooks/store';
 
-const App: FC = () => {
+const App: FC<{ loadApp: () => void }> = ({ loadApp }) => {
   const [ticketsLength, setTicketsLength] = useState(5);
+  const [isOnline, setIsOnline] = useState(true);
   const dispatch = useDispatch();
   const typeTicket = useSelector(typeSortedSelect);
   const transferFilterItems = useSelector(transferFiltersSelect);
   const tickets = useSelector(selectTicketsMemo).slice(0, ticketsLength);
   const fetchTicketsStatus = useSelector(selectFetchTicketsStatus);
+  const store = useAppStore();
+
+  useEffect(() => {
+    const updateIsOnline = () => {
+      setIsOnline(navigator.onLine);
+
+      if (
+        navigator.onLine &&
+        store.getState().aviasales.fetchTicketsStatus !== EStatusFetch.Succeeded
+      ) {
+        loadApp();
+      }
+    };
+
+    window.addEventListener('offline', updateIsOnline);
+    window.addEventListener('online', updateIsOnline);
+
+    return () => {
+      window.removeEventListener('offline', updateIsOnline);
+      window.removeEventListener('online', updateIsOnline);
+    };
+  }, [store, loadApp]);
 
   function onChangeTransferFilter(id: number) {
     dispatch(toggleTransferFiltersItem(id));
@@ -79,27 +103,33 @@ const App: FC = () => {
           />
         </div>
         <section className="app__section">
-          {fetchTicketsStatus === EStatusFetch.Loading && (
-            <div className="loader"></div>
-          )}
+          {!isOnline ? (
+            <div>Connection failed</div>
+          ) : (
+            <>
+              {fetchTicketsStatus === EStatusFetch.Loading && (
+                <div className="loader"></div>
+              )}
 
-          {tickets.map((ticket) => {
-            return <TicketPreview key={ticket.id} ticket={ticket} />;
-          })}
+              {tickets.map((ticket) => {
+                return <TicketPreview key={ticket.id} ticket={ticket} />;
+              })}
 
-          {!!tickets.length && (
-            <Button
-              customClass="app__button-load"
-              text="Показать еще 5 билетов!"
-              brandButton
-              borderType={EBorderRadiusType.Both}
-              onClick={load5Tickets}
-            />
-          )}
-          {!isItemsTrue(transferFilterItems) && (
-            <div className="app__nothing-found">
-              Рейсов, подходящих под заданные фильтры, не найдено
-            </div>
+              {!!tickets.length && (
+                <Button
+                  customClass="app__button-load"
+                  text="Показать еще 5 билетов!"
+                  brandButton
+                  borderType={EBorderRadiusType.Both}
+                  onClick={load5Tickets}
+                />
+              )}
+              {!isItemsTrue(transferFilterItems) && (
+                <div className="app__nothing-found">
+                  Рейсов, подходящих под заданные фильтры, не найдено
+                </div>
+              )}
+            </>
           )}
         </section>
       </main>

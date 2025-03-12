@@ -31,7 +31,7 @@ if (root) {
   createRoot(root).render(
     <StrictMode>
       <Provider store={store}>
-        <App />
+        <App loadApp={loadApp} />
       </Provider>
     </StrictMode>,
   );
